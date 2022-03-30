@@ -1,37 +1,31 @@
-import React,{useEffect,useState} from 'react'
-
+import React from 'react'
+//import { getGifs } from '../helpers/getGifs';
+import { useEffectGifs } from '../hooks/useEffectGifs';
+import { GifGridItem } from './GifGridItem';
 export const GifGrid = ({category}) => {
 
-    const [imagenes, setImagenes] = useState([]);
 
-    useEffect(() => {
-        getGisf()
-        
-    }, []);
-
-    const getGisf = async  () => {
-        const url = 'https:api.giphy.com/v1/stickers/trending?q=Rick+and+Morty&limit=5&api_key=USO4R8jUlNTR32ILSjnbyqMJBnPsQ1hF'
-        const resp = await fetch(url);
-        const {data} = await resp.json();
-        const gif= data.map( img => {
-            return {
-                id:img.id,
-                title:img.title,
-                url:img.images.downsized_medium.url
-            }})
-        console.log(gif);
-        setImagenes(gif);
-    }
-    
+  const {data:imagenes,loading} = useEffectGifs(category)
+  
   return (
-    <div>
-
+      <div>
         <li>{category}</li>
-        {
-           imagenes.map(img => 
-            <h1> { img.title}</h1>
-           )
-        }
-    </div>
+        {loading && <p>Loading...</p>}
+         <div className="card-grid">
+             
+
+                   {
+                       imagenes.map(img => 
+                            <GifGridItem
+                                key={img.id}
+                                {...img}
+
+                            />
+                       )
+                   } 
+
+             
+                    </div>
+      </div>
   )
 }
